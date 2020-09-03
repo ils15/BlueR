@@ -490,9 +490,9 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
     //Bluer
-    #define DEFAULT_Kp 8.4
-    #define DEFAULT_Ki 0.4
-    #define DEFAULT_Kd 44.0
+#define DEFAULT_Kp 11.76
+#define DEFAULT_Ki 0.71
+#define DEFAULT_Kd 48.77
 
   // MakerGear
   //#define DEFAULT_Kp 7.0
@@ -539,9 +539,9 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
     //Bluer
-    #define DEFAULT_bedKp 10.34
-    #define DEFAULT_bedKi 0.25
-    #define DEFAULT_bedKd 300.5
+#define DEFAULT_bedKp 32.59
+#define DEFAULT_bedKi 6.16
+#define DEFAULT_bedKd 114.86
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
