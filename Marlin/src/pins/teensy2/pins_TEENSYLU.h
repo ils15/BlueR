@@ -73,7 +73,7 @@
   *  The pin assignments in this file match the silkscreen.
   */
 
-#if !defined(__AVR_AT90USB1286__) && !defined(__AVR_AT90USB1286P__)
+#if NOT_TARGET(__AVR_AT90USB1286__, __AVR_AT90USB1286P__)
   #error "Oops! Select 'Teensy++ 2.0' or 'Printrboard' in 'Tools > Board.'"
 #endif
 
@@ -155,7 +155,7 @@
 
   #define SD_DETECT_PIN                       -1
 
-#endif // HAS_SPI_LCD && NEWPANEL
+#endif // ULTRA_LCD && NEWPANEL
 
 //
 // M3/M4/M5 - Spindle/Laser Control

@@ -25,7 +25,7 @@
  * Mini-RAMBo pin assignments
  */
 
-#ifndef __AVR_ATmega2560__
+#if NOT_TARGET(__AVR_ATmega2560__)
   #error "Oops! Select 'RAMBo' in 'Tools > Board' or the Mega2560 environment in PlatformIO."
 #endif
 
@@ -189,4 +189,4 @@
 
   #endif // ULTIPANEL || TOUCH_UI_ULTIPANEL
 
-#endif // HAS_SPI_LCD
+#endif // HAS_SPI_LCD || TOUCH_UI_ULTIPANEL

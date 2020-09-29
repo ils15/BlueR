@@ -25,9 +25,9 @@
  * MKS SBASE pin assignments
  */
 
-#if defined(MKS_HAS_LPC1769) && !defined(MCU_LPC1769)
+#if defined(MKS_HAS_LPC1769) && NOT_TARGET(MCU_LPC1769)
   #error "Oops! Make sure you have the LPC1769 environment selected in your IDE."
-#elif !defined(MKS_HAS_LPC1769) && !defined(MCU_LPC1768)
+#elif NOT_TARGET(MKS_HAS_LPC1769, MCU_LPC1768)
   #error "Oops! Make sure you have the LPC1768 environment selected in your IDE."
 #endif
 
@@ -289,20 +289,21 @@
   #define E0_CS_PIN                        P2_11
   #define E1_CS_PIN                        P4_28
 
-// Hardware SPI is on EXP2. See if you can make it work:
-// https://github.com/makerbase-mks/MKS-SBASE/issues/25
-#define TMC_USE_SW_SPI
-#if ENABLED(TMC_USE_SW_SPI)
-  #ifndef TMC_SW_MOSI
-    #define TMC_SW_MOSI                    P0_03  // AUX1
+  // Hardware SPI is on EXP2. See if you can make it work:
+  // https://github.com/makerbase-mks/MKS-SBASE/issues/25
+  #define TMC_USE_SW_SPI
+  #if ENABLED(TMC_USE_SW_SPI)
+    #ifndef TMC_SW_MOSI
+      #define TMC_SW_MOSI                  P0_03  // AUX1
+    #endif
+    #ifndef TMC_SW_MISO
+      #define TMC_SW_MISO                  P0_02  // AUX1
+    #endif
+    #ifndef TMC_SW_SCK
+      #define TMC_SW_SCK                   P0_26  // TH4
+    #endif
   #endif
-  #ifndef TMC_SW_MISO
-    #define TMC_SW_MISO                    P0_02  // AUX1
-  #endif
-  #ifndef TMC_SW_SCK
-    #define TMC_SW_SCK                     P0_26  // TH4
-  #endif
- #endif
+
 #endif
 
 #if MB(MKS_SBASE) && HAS_TMC_UART

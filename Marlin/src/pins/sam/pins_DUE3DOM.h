@@ -25,7 +25,7 @@
  * DUE3DOM pin assignments
  */
 
-#ifndef __SAM3X8E__
+#if NOT_TARGET(__SAM3X8E__)
   #error "Oops! Select 'Arduino Due' in 'Tools > Board.'"
 #endif
 
@@ -147,7 +147,7 @@
     #define SDSS                               4
     #define SD_DETECT_PIN                     14
 
-  #elif HAS_SSD1306_OLED_I2C
+  #elif HAS_U8GLIB_I2C_OLED
 
     #define BTN_EN1                           50
     #define BTN_EN2                           52

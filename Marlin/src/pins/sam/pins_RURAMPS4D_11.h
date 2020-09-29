@@ -32,7 +32,7 @@
  *           |
  */
 
-#ifndef __SAM3X8E__
+#if NOT_TARGET(__SAM3X8E__)
   #error "Oops! Select 'Arduino Due' in 'Tools > Board.'"
 #endif
 
@@ -221,7 +221,7 @@
     #define LCD_PINS_RS                       52
     #define LCD_PINS_ENABLE                   53
 
-  #elif HAS_SSD1306_OLED_I2C
+  #elif HAS_U8GLIB_I2C_OLED
 
     #define BEEPER_PIN                        62
     #define LCD_SDSS                          10
