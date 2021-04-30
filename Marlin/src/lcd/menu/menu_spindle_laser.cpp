@@ -51,11 +51,22 @@
     editable.state = is_enabled;
     EDIT_ITEM(bool, MSG_CUTTER(TOGGLE), &is_enabled, []{ if (editable.state) cutter.disable(); else cutter.enable_same_dir(); });
 
+    #if ENABLED(AIR_EVACUATION)
+      bool evac_state = cutter.air_evac_state();
+      EDIT_ITEM(bool, MSG_CUTTER(EVAC_TOGGLE), &evac_state, cutter.air_evac_toggle);
+    #endif
+
     #if ENABLED(SPINDLE_CHANGE_DIR)
       if (!is_enabled) {
         editable.state = is_rev;
         ACTION_ITEM_P(is_rev ? GET_TEXT(MSG_CUTTER(REVERSE)) : GET_TEXT(MSG_CUTTER(FORWARD)), []{ cutter.set_reverse(!editable.state); });
       }
+    #endif
+
+    #if ENABLED(LASER_FEATURE)
+      // Setup and fire a test pulse using the current PWM power level for for a duration of test_pulse_min to test_pulse_max ms.
+      EDIT_ITEM_FAST(CUTTER_MENU_PULSE_TYPE, MSG_LASER_PULSE_MS, &cutter.testPulse, LASER_TEST_PULSE_MIN, LASER_TEST_PULSE_MAX);
+      ACTION_ITEM(MSG_LASER_FIRE_PULSE, cutter.test_fire_pulse);
     #endif
 
     #if BOTH(MARLIN_DEV_MODE, HAL_CAN_SET_PWM_FREQ) && defined(SPINDLE_LASER_FREQUENCY)

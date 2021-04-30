@@ -24,7 +24,7 @@
 #define CONFIG_EXAMPLES_DIR "Two Trees/BlueR/BlueR V3"
 
 //#define BLUER_TMC2209 // Enable for the TMC2209 driver version
-#define BLUER_BLTOUCH // Enable if you want to use BLTOUCH
+//#define BLUER_BLTOUCH // Enable if you want to use BLTOUCH
 
 /**
  * Configuration.h
