@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#define CONFIG_EXAMPLES_DIR "Two Trees/BlueR/BlueR V3"
+#define CONFIG_EXAMPLES_DIR "Two Trees/BlueR/BlueR V2"
 
 /**
  * Configuration_adv.h

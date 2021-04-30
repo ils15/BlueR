@@ -21,10 +21,11 @@
  */
 #pragma once
 
-#define CONFIG_EXAMPLES_DIR "Two Trees/BlueR/BlueR V3"
+#define CONFIG_EXAMPLES_DIR "Two Trees/BlueR/BlueR V2"
 
-//#define BLUER_TMC2209 // Enable for the TMC2209 driver version
-//#define BLUER_BLTOUCH // Enable if you want to use BLTOUCH
+//#define BLUER_TMC2209    // Enable for the TMC2209 driver version
+//#define BLUER_INVERTED_E // Enable if the extruder runs the wrong way
+#define BLUER_BLTOUCH // Enable if you want to use BLTOUCH
 
 /**
  * Configuration.h
@@ -816,11 +817,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#if ENABLED(BLUER_TMC2209)
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
-#else
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 400, 415 }
-#endif
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1219,8 +1216,12 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#if ENABLED(BLUER_TMC2209)
-  #define INVERT_E0_DIR false
+#ifdef BLUER_INVERTED_E
+  #if ENABLED(BLUER_TMC2209)
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
 #else
   #define INVERT_E0_DIR true
 #endif
