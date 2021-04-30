@@ -27,7 +27,7 @@
 #include "../gcode.h"
 #include "../../module/motion.h"
 #include "../../module/probe.h"
-#include "../../lcd/ultralcd.h"
+#include "../../lcd/marlinui.h"
 
 #include "../../feature/bedlevel/bedlevel.h"
 
@@ -245,6 +245,7 @@ void GcodeSuite::M48() {
         SERIAL_ECHO(n + 1);
         SERIAL_ECHOPAIR(" of ", int(n_samples));
         SERIAL_ECHOPAIR_F(": z: ", pz, 3);
+        SERIAL_CHAR(' ');
         dev_report(verbose_level > 2, mean, sigma, min, max);
         SERIAL_EOL();
       }
