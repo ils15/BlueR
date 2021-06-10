@@ -28,17 +28,20 @@
 
 CaseLight caselight;
 
-uint8_t CaseLight::brightness = CASE_LIGHT_DEFAULT_BRIGHTNESS;
+#if CASELIGHT_USES_BRIGHTNESS && !defined(CASE_LIGHT_DEFAULT_BRIGHTNESS)
+  #define CASE_LIGHT_DEFAULT_BRIGHTNESS 0 // For use on PWM pin as non-PWM just sets a default
+#endif
+
+#if CASELIGHT_USES_BRIGHTNESS
+  uint8_t CaseLight::brightness = CASE_LIGHT_DEFAULT_BRIGHTNESS;
+#endif
+
 bool CaseLight::on = CASE_LIGHT_DEFAULT_ON;
 
-#if ENABLED(CASE_LIGHT_USE_NEOPIXEL)
-  LEDColor CaseLight::color =
-    #ifdef CASE_LIGHT_NEOPIXEL_COLOR
-      CASE_LIGHT_NEOPIXEL_COLOR
-    #else
-      { 255, 255, 255, 255 }
-    #endif
-  ;
+#if CASE_LIGHT_IS_COLOR_LED
+  #include "leds/leds.h"
+  constexpr uint8_t init_case_light[] = CASE_LIGHT_DEFAULT_COLOR;
+  LEDColor CaseLight::color = { init_case_light[0], init_case_light[1], init_case_light[2], TERN_(HAS_WHITE_LED, init_case_light[3]) };
 #endif
 
 #ifndef INVERT_CASE_LIGHT
@@ -46,35 +49,33 @@ bool CaseLight::on = CASE_LIGHT_DEFAULT_ON;
 #endif
 
 void CaseLight::update(const bool sflag) {
-  /**
-   * The brightness_sav (and sflag) is needed because ARM chips ignore
-   * a "WRITE(CASE_LIGHT_PIN,x)" command to the pins that are directly
-   * controlled by the PWM module. In order to turn them off the brightness
-   * level needs to be set to OFF. Since we can't use the PWM register to
-   * save the last brightness level we need a variable to save it.
-   */
-  static uint8_t brightness_sav;  // Save brightness info for restore on "M355 S1"
+  #if CASELIGHT_USES_BRIGHTNESS
+    /**
+     * The brightness_sav (and sflag) is needed because ARM chips ignore
+     * a "WRITE(CASE_LIGHT_PIN,x)" command to the pins that are directly
+     * controlled by the PWM module. In order to turn them off the brightness
+     * level needs to be set to OFF. Since we can't use the PWM register to
+     * save the last brightness level we need a variable to save it.
+     */
+    static uint8_t brightness_sav;  // Save brightness info for restore on "M355 S1"
 
-  if (on || !sflag)
-    brightness_sav = brightness;  // Save brightness except for M355 S0
-  if (sflag && on)
-    brightness = brightness_sav;  // Restore last brightness for M355 S1
+    if (on || !sflag)
+      brightness_sav = brightness;  // Save brightness except for M355 S0
+    if (sflag && on)
+      brightness = brightness_sav;  // Restore last brightness for M355 S1
 
-  #if ENABLED(CASE_LIGHT_USE_NEOPIXEL) || DISABLED(CASE_LIGHT_NO_BRIGHTNESS)
     const uint8_t i = on ? brightness : 0, n10ct = INVERT_CASE_LIGHT ? 255 - i : i;
+    UNUSED(n10ct);
   #endif
 
-  #if ENABLED(CASE_LIGHT_USE_NEOPIXEL)
+  #if CASE_LIGHT_IS_COLOR_LED
 
-    leds.set_color(
-      MakeLEDColor(color.r, color.g, color.b, color.w, n10ct),
-      false
-    );
+    leds.set_color(MakeLEDColor(color.r, color.g, color.b, color.w, n10ct));
 
-  #else // !CASE_LIGHT_USE_NEOPIXEL
+  #else // !CASE_LIGHT_IS_COLOR_LED
 
-    #if DISABLED(CASE_LIGHT_NO_BRIGHTNESS)
-      if (PWM_PIN(CASE_LIGHT_PIN))
+    #if CASELIGHT_USES_BRIGHTNESS
+      if (pin_is_pwm())
         analogWrite(pin_t(CASE_LIGHT_PIN), (
           #if CASE_LIGHT_MAX_PWM == 255
             n10ct
@@ -89,7 +90,11 @@ void CaseLight::update(const bool sflag) {
         WRITE(CASE_LIGHT_PIN, s ? HIGH : LOW);
       }
 
-  #endif // !CASE_LIGHT_USE_NEOPIXEL
+  #endif // !CASE_LIGHT_IS_COLOR_LED
+
+  #if ENABLED(CASE_LIGHT_USE_RGB_LED)
+    if (leds.lights_on) leds.update(); else leds.set_off();
+  #endif
 }
 
 #endif // CASE_LIGHT_ENABLE

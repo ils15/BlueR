@@ -66,7 +66,7 @@ uint8_t MCP4728::analogWrite(const uint8_t channel, const uint16_t value) {
 }
 
 /**
- * Write all input resistor values to EEPROM using SequencialWrite method.
+ * Write all input resistor values to EEPROM using SequentialWrite method.
  * This will update both input register and EEPROM value
  * This will also write current Vref, PowerDown, Gain settings to EEPROM
  */
@@ -123,8 +123,8 @@ uint8_t MCP4728::getDrvPct(const uint8_t channel) { return uint8_t(100.0 * dac_v
  * Receives all Drive strengths as 0-100 percent values, updates
  * DAC Values array and calls fastwrite to update the DAC.
  */
-void MCP4728::setDrvPct(xyze_uint8_t &pct) {
-  dac_values *= 0.01 * pct * (DAC_STEPPER_MAX);
+void MCP4728::setDrvPct(xyze_uint_t &pct) {
+  dac_values = pct * (DAC_STEPPER_MAX) * 0.01f;
   fastWrite();
 }
 
